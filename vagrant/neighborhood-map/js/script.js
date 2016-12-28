@@ -174,6 +174,11 @@ function ViewModel() {
 		}
 	}, self);
 
+	var bounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(34.133367, -118.676771),
+    new google.maps.LatLng(34.280771, -118.439594)
+	);
+
 	this.mapElem = document.getElementById('map');
 	this.mapElem.style.height = window.innerHeight - 50;
 }
@@ -182,6 +187,6 @@ function startApp() {
 	ko.applyBindings(new ViewModel());
 }
 
-function errorHandling() {
+function googleError() {
 	alert("Google Maps has failed to load. Please check your internet connection and try again.");
 }
