@@ -20,27 +20,29 @@ def deleteMatches():
     """Remove all the match records from the database."""
 
     db, c = connect()
-    c.execute("TRUNCATE matchup;")                           #clear rows in matchup table
-    c.execute("UPDATE players SET wins = 0, matches=0;")      #keeps rows in standings but resets matches and wins to 0
+    c.execute("TRUNCATE matchup;")                  #clear rows in matchup table
     db.commit()
     db.close()
+
 
 def deletePlayers():
     """Remove all the player records from the database."""
 
     db, c = connect()
-    c.execute("TRUNCATE players;")                           #clear rows in players table
+    c.execute("TRUNCATE players CASCADE;")          #clear rows in players table
     db.commit()
     db.close()
+
 
 def countPlayers():
     """Returns the number of players currently registered."""
 
     db, c = connect()
-    c.execute("SELECT count(*) FROM players;")                 #counts number of rows in players table
+    c.execute("SELECT count(*) FROM players;")      #counts # of rows in players
     result = c.fetchone()
     db.close()
-    return int(result[0])                                      #return count of players
+    return int(result[0])                           #return count of players
+
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -52,7 +54,7 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     db, c = connect()
-    c.execute("INSERT INTO players (player_name) VALUES (%s);", (name,))           #insert new player into platyers table
+    c.execute("INSERT INTO players (player_name) VALUES (%s);", (name,))
     db.commit()
     db.close()
 
@@ -71,10 +73,12 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     db, c = connect()
-    c.execute("SELECT * FROM players ORDER BY wins;")
-    rows = c.fetchall()                                                         #select all rows from standings and sort by wins
-    db.close()                                                                  #return tuple with format (id, name, wins, matches)
+    query = ("SELECT * FROM standings;")
+    c.execute(query)
+    rows = c.fetchall()
+    db.close()
     return rows
+
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -84,9 +88,7 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     db, c = connect()
-    c.execute("INSERT INTO matchup (winner, loser) VALUES (%s,%s) ", (winner,loser,)) #add a win to the winners standings and increment matches
-    c.execute("UPDATE players SET wins=wins+1, matches=matches+1 WHERE player_id=(%s) ", (winner,)) #add a win to the winners standings and increment matches
-    c.execute("UPDATE players SET matches=matches+1 WHERE player_id=(%s) ", (loser,)) #add a win to the winners standings and increment matches
+    c.execute("INSERT INTO matchup (winner, loser) VALUES (%s, %s) ", (winner, loser,))
     db.commit()
     db.close()
 
@@ -107,19 +109,19 @@ def swissPairings():
         name2: the second player's name
     """
 
-    rows = playerStandings()                                                      #select all players from standings in win order
+    rows = playerStandings()    #select all players from standings in win order
 
     i = True
-    pairings=[]
-    idx=0
-    for row in rows:                                                            #tuple format is (id1, username1, id2, username2)
-        if i == True:
+    pairings = []
+    idx = 0
+    for row in rows:           #tuple format is (id1, username1, id2, username2)
+        if i is True:
             (id1, player_name_1, wins, matches) = row                              #user_1
             i = False
         else:
             (id2, player_name_2, wins, matches) = row                              #user_2
             i = True
-            pairings.append((id1,player_name_1,id2,player_name_2))
+            pairings.append((id1, player_name_1, id2, player_name_2))
             idx=idx+1
 
     return pairings
