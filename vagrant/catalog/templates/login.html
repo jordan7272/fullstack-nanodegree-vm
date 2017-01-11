@@ -17,10 +17,11 @@
 
 <!-- GOOGLE PLUS SIGN IN-->
 
+
           <div id="signInButton">
           <span class="g-signin"
             data-scope="openid email"
-            data-clientid="653868820796-g0vek0mcv956ptp2rpofk8pgl99b4lv2.apps.googleusercontent.com"
+            data-clientid="13140951618-15nik769cellkubaqnjk5facdib2dh4d.apps.googleusercontent.com"
             data-redirecturi="postmessage"
             data-accesstype="offline"
             data-cookiepolicy="single_host_origin"
@@ -38,7 +39,7 @@ function signInCallback(authResult) {
     // Hide the sign-in button now that the user is authorized
     $('#signinButton').attr('style', 'display: none');
 
-    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main sports page
+    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
     $.ajax({
       type: 'POST',
       url: '/gconnect?state={{STATE}}',
@@ -50,7 +51,7 @@ function signInCallback(authResult) {
         if (result) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
-          window.location.href = "/sport";
+          window.location.href = "/restaurant";
          }, 4000);
 
 
@@ -111,7 +112,7 @@ function signInCallback(authResult) {
         if (result) {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
-          window.location.href = "/sport";
+          window.location.href = "/restaurant";
          }, 4000);
 
 
